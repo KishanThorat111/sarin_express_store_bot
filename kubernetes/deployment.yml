@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: antep-kitchen-bot-deployment
-  namespace: antep-kitchen-bot
+  name: sarin-express-store-bot-deployment
+  namespace: sarin-express-store-bot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: antep-kitchen-bot
+      app: sarin-express-store-bot
   template:
     metadata:
       labels:
-        app: antep-kitchen-bot
+        app: sarin-express-store-bot
     spec:
       containers:
       - name: bot-container
-        image: kishanthorat111/antep-kitchen-bot:latest
-        resources: # Resource limits for stability
+        image: kishanthorat111/sarin-express-store-bot:latest # Update to your DockerHub repo
+        resources:
           requests:
             memory: "128Mi"
             cpu: "100m"
@@ -25,7 +25,7 @@ spec:
             cpu: "500m"
         envFrom:
           - secretRef:
-              name: antep-kitchen-secrets
+              name: sarin-express-store-secrets   # You will create this secret file
         volumeMounts:
         - name: gcp-credentials-volume
           mountPath: /app/credentials.json
@@ -33,7 +33,7 @@ spec:
       volumes:
       - name: gcp-credentials-volume
         secret:
-          secretName: antep-kitchen-secrets
+          secretName: sarin-express-store-secrets
           items:
           - key: credentials.json
             path: credentials.json
