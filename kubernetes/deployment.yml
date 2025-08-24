@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: antep-kitchen-bot-deployment
+  namespace: antep-kitchen-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: antep-kitchen-bot
+  template:
+    metadata:
+      labels:
+        app: antep-kitchen-bot
+    spec:
+      containers:
+      - name: bot-container
+        image: kishanthorat111/antep-kitchen-bot:latest
+        resources: # Resource limits for stability
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        envFrom:
+          - secretRef:
+              name: antep-kitchen-secrets
+        volumeMounts:
+        - name: gcp-credentials-volume
+          mountPath: /app/credentials.json
+          subPath: credentials.json
+      volumes:
+      - name: gcp-credentials-volume
+        secret:
+          secretName: antep-kitchen-secrets
+          items:
+          - key: credentials.json
+            path: credentials.json
